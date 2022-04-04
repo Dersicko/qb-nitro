@@ -2,7 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local VehicleNitrous = {}
 
 QBCore.Functions.CreateUseableItem("nitrous", function(source, item)
-    TriggerClientEvent('nitrous:client:LoadNitrous', source)
+    TriggerClientEvent('qb-nitrous:client:LoadNitrous', source)
 end)
 
 RegisterNetEvent('nitrous:server:LoadNitrous', function(Plate)

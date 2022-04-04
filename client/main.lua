@@ -16,7 +16,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     end)
 end)
 
-RegisterNetEvent('nitrous:client:LoadNitrous', function()
+RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
     local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
     local ped = PlayerPedId()
     local veh = GetVehiclePedIsIn(ped)
@@ -71,11 +71,19 @@ CreateThread(function()
                     if PurgeMode then
                         if IsControlPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then
                             if VehicleNitrous[Plate].level - 0.1 ~= 0 then
-                                TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.1))
-                                TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
-                                TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
-                                SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
-				                SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                if purgeflowrate <= 0.5 then
+                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.1))
+                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                    TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
+                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
+				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                elseif purgeflowrate >= 0.5 then
+                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.3))
+                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                    TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
+                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
+				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                end
                             else
                                 TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
                                 SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
@@ -83,12 +91,12 @@ CreateThread(function()
                             end
                         elseif IsControlJustPressed(0, 121) and purgeflowrate <= 0.9 then
                             purgeflowrate = purgeflowrate + 0.1
-                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate, 'inform', 5500)
+                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
                             Wait(500)
                         elseif IsControlJustPressed(0, 214) and purgeflowrate >= 0.2 then
                             NitrousActivated = false
                             purgeflowrate = purgeflowrate - 0.1
-                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate, 'inform', 5500)
+                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
                             Wait(500)
                         else
                             SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
@@ -131,11 +139,11 @@ CreateThread(function()
                         if not PurgeMode and NitroMode then
                             PurgeMode = true
                             NitroMode = false
-                            QBCore.Functions.Notify('Nitro Mode: Smoke Extraction', 'inform', 5500)
+                            QBCore.Functions.Notify('Nitro Mode: Smoke Extraction'--[[, 'inform', 5500]])
                         elseif not NitroMode and PurgeMode then
                             NitroMode = true
                             PurgeMode = false
-                            QBCore.Functions.Notify('Nitro Mode: Nitro', 'inform', 5500)
+                            QBCore.Functions.Notify('Nitro Mode: Nitro'--[[, 'inform', 5500]])
                         end
                     end
 
