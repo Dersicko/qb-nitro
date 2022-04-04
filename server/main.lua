@@ -30,13 +30,3 @@ end)
 RegisterNetEvent('nitrous:server:StopSync', function(plate)
     TriggerClientEvent('nitrous:client:StopSync', -1, plate)
 end)
-
-RegisterNetEvent('nitrous:server:Update', function(data)
-    local Player = QBCore.Functions.GetPlayer(source)
-    MySQL.Async.execute('UPDATE player_vehicles SET hasnitro = @hasnitro, level = @level WHERE plate = @plate AND citizenid = @citizenid', {
-        ["@plate"]     = data.Plate,
-        ["@citizenid"] = Player.PlayerData.citizenid,
-        ['@hasnitro']  = data.hasnitro,
-        ['@level']     = data.level,
-    })
-end)

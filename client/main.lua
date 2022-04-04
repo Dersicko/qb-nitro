@@ -1,9 +1,10 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local NitrousActivated = false
-local NitrousBoost = 25.0
+local NitrousBoost = 1.0
 local VehicleNitrous = {}
 local Fxs = {}
-local purgeflowrate = 0.2
+local purgeflowrate = 0.1
+local nitroflowrate = 1.0
 
 local function trim(value)
 	if not value then return nil end
@@ -68,60 +69,38 @@ CreateThread(function()
             local Plate = trim(GetVehicleNumberPlateText(CurrentVehicle))
             if VehicleNitrous[Plate] ~= nil then
                 if VehicleNitrous[Plate].hasnitro then
-                    if PurgeMode then
-                        if IsControlPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then
-                            if VehicleNitrous[Plate].level - 0.1 ~= 0 then
-                                if purgeflowrate <= 0.5 then
-                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.1))
-                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
-                                    TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
-                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
-				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
-                                elseif purgeflowrate >= 0.5 then
-                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.3))
-                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
-                                    TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
-                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
-				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
-                                end
-                            else
-                                TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
-                                SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
-                                SetVehicleBoostActive(CurrentVehicle, false)
-                            end
-                        elseif IsControlJustPressed(0, 121) and purgeflowrate <= 0.9 then
-                            purgeflowrate = purgeflowrate + 0.1
-                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
-                            Wait(500)
-                        elseif IsControlJustPressed(0, 214) and purgeflowrate >= 0.2 then
-                            NitrousActivated = false
-                            purgeflowrate = purgeflowrate - 0.1
-                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
-                            Wait(500)
-                        else
-                            SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
-                            TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, false)
-                        end
-                    elseif NitroMode then
+                    if NitroMode then
                         if IsControlJustPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then
-                            SetVehicleEnginePowerMultiplier(CurrentVehicle, NitrousBoost)
-                            SetVehicleEngineTorqueMultiplier(CurrentVehicle, NitrousBoost)
                             SetEntityMaxSpeed(CurrentVehicle, 999.0)
                             NitrousActivated = true
-
                             CreateThread(function()
                                 while NitrousActivated do
-                                    local veh = GetVehiclePedIsIn(PlayerPedId())
-                                    if VehicleNitrous[Plate].level - 0.4 ~= 0 then
-                                        TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.4))
-                                        TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
-                                        TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
+                                    if VehicleNitrous[Plate].level - 1 ~= 0 then
+                                        if nitroflowrate == 1.0 then
+                                            NitrousBoostNew = NitrousBoost + 1.0
+                                            SetVehicleEnginePowerMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            SetVehicleEngineTorqueMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.3))
+                                            TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                        elseif nitroflowrate == 2.0 then
+                                            NitrousBoostNew = NitrousBoost + 2.0
+                                            SetVehicleEnginePowerMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            SetVehicleEngineTorqueMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.7))
+                                            TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                        elseif nitroflowrate == 3.0 then
+                                            NitrousBoostNew = NitrousBoost + 3.0
+                                            SetVehicleEnginePowerMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            SetVehicleEngineTorqueMultiplier(CurrentVehicle, NitrousBoostNew)
+                                            TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.2))
+                                            TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                        end
                                     else
                                         TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
                                         NitrousActivated = false
-                                        SetVehicleBoostActive(veh, 0)
-                                        SetVehicleEnginePowerMultiplier(veh, LastEngineMultiplier)
-                                        SetVehicleEngineTorqueMultiplier(veh, 1.0)
+                                        SetVehicleBoostActive(CurrentVehicle, 0)
+                                        SetVehicleEnginePowerMultiplier(CurrentVehicle, LastEngineMultiplier)
+                                        SetVehicleEngineTorqueMultiplier(CurrentVehicle, 1.0)
                                         StopScreenEffect("RaceTurbo")
                                         for index,_ in pairs(Fxs) do
                                             StopParticleFxLooped(Fxs[index], 1)
@@ -129,9 +108,59 @@ CreateThread(function()
                                             Fxs[index] = nil
                                         end
                                     end
-                                    Wait(100)
+                                    Wait(200)
                                 end
                             end)
+                        elseif IsControlJustPressed(0, 121) and nitroflowrate <= 2 then
+                            nitroflowrate = nitroflowrate + 1
+                            QBCore.Functions.Notify('Nitro Flowrate: ' .. nitroflowrate--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 121) and nitroflowrate >= 2 then
+                            QBCore.Functions.Notify('Nitro is on maximum Flowrate'--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 214) and nitroflowrate >= 2 then
+                            nitroflowrate = nitroflowrate - 1
+                            QBCore.Functions.Notify('Nitro Flowrate: ' .. nitroflowrate--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 214) and nitroflowrate <= 2 then
+                            QBCore.Functions.Notify('Nitro is on minimum Flowrate'--[[, 'inform', 5500]])
+                        end
+                    elseif PurgeMode then
+                        if IsControlPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then
+                            if VehicleNitrous[Plate].level - 1 ~= 0 then
+                                if purgeflowrate >= 0.1 or purgeflowrate <= 0.3 then
+                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.5))
+                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
+				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                    Wait(500)
+                                elseif purgeflowrate >= 0.4 or purgeflowrate <= 0.7 then
+                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 2.5))
+                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
+                                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                elseif purgeflowrate >= 0.8 or purgeflowrate <= 1.0 then
+                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 3.5))
+                                    TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
+                                    SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
+                                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
+                                end
+                            else
+                                TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
+                                SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
+                                SetVehicleBoostActive(CurrentVehicle, false)
+                            end
+                            Wait(200)
+                        elseif IsControlJustPressed(0, 121) and purgeflowrate <= 0.9 then
+                            purgeflowrate = purgeflowrate + 0.1
+                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 121) and purgeflowrate >= 0.9 then
+                            QBCore.Functions.Notify('Purge Spray is on maximum Flowrate'--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 214) and purgeflowrate >= 0.2 then
+                            purgeflowrate = purgeflowrate - 0.1
+                            QBCore.Functions.Notify('Purge Spray Flowrate: ' .. purgeflowrate--[[, 'inform', 5500]])
+                        elseif IsControlJustPressed(0, 214) and purgeflowrate <= 0.2 then
+                            QBCore.Functions.Notify('Purge Spray is on minimum Flowrate'--[[, 'inform', 5500]])
+                        else
+                            SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
+                            TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, false)
                         end
                     end
 
@@ -158,11 +187,21 @@ CreateThread(function()
                                 TriggerServerEvent('nitrous:server:StopSync', trim(GetVehicleNumberPlateText(veh)))
                                 Fxs[index] = nil
                             end
-                            StopScreenEffect("RaceTurbo")
                             TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, false)
                             TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
                             NitrousActivated = false
                         end
+                    end
+                else
+                    TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
+                    NitrousActivated = false
+                    SetVehicleBoostActive(CurrentVehicle, 0)
+                    SetVehicleEnginePowerMultiplier(CurrentVehicle, LastEngineMultiplier)
+                    SetVehicleEngineTorqueMultiplier(CurrentVehicle, 1.0)
+                    for index,_ in pairs(Fxs) do
+                        StopParticleFxLooped(Fxs[index], 1)
+                        TriggerServerEvent('nitrous:server:StopSync', trim(GetVehicleNumberPlateText(CurrentVehicle)))
+                        Fxs[index] = nil
                     end
                 end
             else
@@ -170,13 +209,11 @@ CreateThread(function()
                     TriggerEvent('hud:client:UpdateNitrous', false, nil, false)
                     nosupdated = true
                 end
-                StopScreenEffect("RaceTurbo")
             end
         else
             if nosupdated then
-                nosupdated = false
+                nosupdated = true
             end
-            StopScreenEffect("RaceTurbo")
             Wait(1500)
         end
         Wait(3)
@@ -206,7 +243,7 @@ function SetVehicleNitroPurgeEnabled(vehicle, enabled)
       local offright = GetOffsetFromEntityGivenWorldCoords(vehicle, posright.x, posright.y, posright.z)
       local ptfxs = {}
   
-      for i=0,2 do
+      for i=0,1 do
         local leftPurge = CreateVehiclePurgeSpray(vehicle, offleft.x - 0.1, offleft.y + 0.5, offleft.z + 0.05, 30.0, -50.0, 0.5, purgeflowrate)
         local rightPurge = CreateVehiclePurgeSpray(vehicle, offright.x + 0.1, offright.y + 0.5, offright.z + 0.05, 30.0, 50.0, 0.5, purgeflowrate)
   
@@ -262,9 +299,6 @@ CreateThread(function()
             local veh = GetVehiclePedIsIn(PlayerPedId())
             if veh ~= 0 then
                 TriggerServerEvent('nitrous:server:SyncFlames', VehToNet(veh))
-                SetVehicleBoostActive(veh, 1)
-                --StartScreenEffect("RaceTurbo", 0.0, 0)
-
                 for _,bones in pairs(p_flame_location) do
                     if GetEntityBoneIndexByName(veh, bones) ~= -1 then
                         if Fxs[bones] == nil then
@@ -342,6 +376,8 @@ end)
 
 RegisterNetEvent('nitrous:client:UnloadNitrous', function(Plate)
     VehicleNitrous[Plate] = nil
+    TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items['emptynitrous'], "add")
+    TriggerServerEvent("QBCore:Server:AddItem", 'emptynitrous', 1)
     local CurrentVehicle = GetVehiclePedIsIn(PlayerPedId())
     local CPlate = trim(GetVehicleNumberPlateText(CurrentVehicle))
     if CPlate == Plate then
