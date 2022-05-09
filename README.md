@@ -13,6 +13,9 @@ Add item into shared/items.lua
 ['bottlenitrous'] 				 	 = {['name'] = 'bottlenitrous', 			  	  		['label'] = 'Bottle Nitrous', 					['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'bottlenitrous.png', 				['unique'] = false, 	['useable'] = false, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'Empty bottle of nitrous. You have to Refil'},
 ```
 
+Import nitrous.sql into your DataBase
+
+Add image from inventory-image into your inventory script
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
@@ -49,9 +52,6 @@ local function enterVehicle(veh, indexgarage, type, garage)
     end, plate, type, indexgarage, PlayerGang.name)
 end
 ```
-
-import nitrous.sql into your DataBase
-
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Big Thanks on Silent Man1C for helping me alot with saving in db
