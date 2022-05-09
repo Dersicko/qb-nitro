@@ -6,11 +6,12 @@ When nitro or purge finished give you empty bottle if you want to refill
 
 BUG: Infinity nitro and sound for purge
 
-Insert into DataBase player_vehicles
-`nitrous` int(11) NOT NULL DEFAULT 0
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add item into shared/items.lua
 ['bottlenitrous'] 				 	 = {['name'] = 'bottlenitrous', 			  	  		['label'] = 'Bottle Nitrous', 					['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'bottlenitrous.png', 				['unique'] = false, 	['useable'] = false, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'Empty bottle of nitrous. You have to Refil'},
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
 
@@ -34,7 +35,6 @@ local function enterVehicle(veh, indexgarage, type, garage)
                 InputOut = true
                 InputIn = false
             end
-
             if plate then
                 OutsideVehicles[plate] = nil
                 TriggerServerEvent('qb-garages:server:UpdateOutsideVehicles', OutsideVehicles)
@@ -45,5 +45,7 @@ local function enterVehicle(veh, indexgarage, type, garage)
         end
     end, plate, type, indexgarage, PlayerGang.name)
 end
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Big Thanks on Silent Man1C for helping me alot with saving in db
