@@ -19,6 +19,7 @@ TriggerEvent('nitrous:client:getNosLevel')
 
 Have to Look Like this
 
+```lua
 local function enterVehicle(veh, indexgarage, type, garage)
     local plate = QBCore.Functions.GetPlate(veh)
     QBCore.Functions.TriggerCallback('qb-garage:server:checkOwnership', function(owned)
@@ -45,6 +46,7 @@ local function enterVehicle(veh, indexgarage, type, garage)
         end
     end, plate, type, indexgarage, PlayerGang.name)
 end
+```
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
