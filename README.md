@@ -50,6 +50,8 @@ local function enterVehicle(veh, indexgarage, type, garage)
 end
 ```
 
+import nitrous.sql into your DataBase
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Big Thanks on Silent Man1C for helping me alot with saving in db
