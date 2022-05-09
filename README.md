@@ -59,4 +59,8 @@ end
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
 Big Thanks on Silent and Man1C for helping me alot with function for saving in DataBase
+=======
+Big Thanks on Silent and Man1C for helping me alot with function for saving in db
+>>>>>>> 7f82069e86a65d06cb486dfd9f7adee1e3631837
