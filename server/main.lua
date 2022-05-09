@@ -25,8 +25,14 @@ end)
 RegisterNetEvent('nitrous:server:UpdateNitroLevel', function(Plate, level)
     VehicleNitrous[Plate].level = level
     TriggerClientEvent('nitrous:client:UpdateNitroLevel', -1, Plate, level)
+    TriggerClientEvent('nitrous:client:UpdateNitrousLevel', -1, Plate, NitrousLevel)
 end)
 
 RegisterNetEvent('nitrous:server:StopSync', function(plate)
     TriggerClientEvent('nitrous:client:StopSync', -1, plate)
+end)
+
+
+RegisterNetEvent('nitrous:server:updateVehicleNos', function(nos, plate)
+    MySQL.Async.execute('UPDATE player_vehicles SET nitrous = ? WHERE plate = ?', {nos, plate})
 end)

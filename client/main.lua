@@ -42,7 +42,6 @@ RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
                         local CurrentVehicle = GetVehiclePedIsIn(PlayerPedId())
                         local Plate = trim(GetVehicleNumberPlateText(CurrentVehicle))
                         TriggerServerEvent('nitrous:server:LoadNitrous', Plate)
-                        TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
                     end)
                 else
                     QBCore.Functions.Notify("You cannot do that from this seat!", "error")
@@ -383,5 +382,20 @@ RegisterNetEvent('nitrous:client:UnloadNitrous', function(Plate)
     if CPlate == Plate then
         NitrousActivated = false
         TriggerEvent('hud:client:UpdateNitrous', false, nil, false)
+    end
+end)
+
+function tableHasKey(table,key)
+    return table[key] ~= nil
+end
+
+RegisterNetEvent('nitrous:client:getNosLevel', function()
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(ped, false)
+    local modelPlate = QBCore.Functions.GetPlate(vehicle)
+    local hasNitro = tableHasKey(VehicleNitrous, modelPlate)
+
+    if hasNitro then
+        TriggerServerEvent('nitrous:server:updateVehicleNos', VehicleNitrous[modelPlate].level, modelPlate)
     end
 end)
