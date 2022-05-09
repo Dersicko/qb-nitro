@@ -9,14 +9,16 @@ BUG: Infinity nitro and sound for purge
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add item into shared/items.lua
+```lua
 ['bottlenitrous'] 				 	 = {['name'] = 'bottlenitrous', 			  	  		['label'] = 'Bottle Nitrous', 					['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'bottlenitrous.png', 				['unique'] = false, 	['useable'] = false, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'Empty bottle of nitrous. You have to Refil'},
+```
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
-
+```lua
 TriggerEvent('nitrous:client:getNosLevel')
-
+```
 Have to Look Like this
 
 ```lua
