@@ -16,6 +16,7 @@ Add item into shared/items.lua
 Import nitrous.sql into your DataBase
 
 Add image from inventory-image into your inventory script
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
