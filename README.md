@@ -3,7 +3,9 @@ WIP its not Fully finished
 Original Nitrous Script from qb-tunerchip with modifications
 
 Purge System
+
 Purge Flow Rate with different size of Purge Effect depends of Purge Flow Rate
+
 Nitro Flow Rate with different power depends of Nitro Flow Rate
 
 When nitro or purge finished give you empty bottle if you want to refill
@@ -59,8 +61,4 @@ end
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<<<<<<< HEAD
 Big Thanks on Silent and Man1C for helping me alot with function for saving in DataBase
-=======
-Big Thanks on Silent and Man1C for helping me alot with function for saving in db
->>>>>>> 7f82069e86a65d06cb486dfd9f7adee1e3631837
