@@ -55,4 +55,4 @@ end
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Big Thanks on Silent Man1C for helping me alot with saving in db
+Big Thanks on Silent and Man1C for helping me alot with function for saving in db
