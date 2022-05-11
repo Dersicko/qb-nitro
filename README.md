@@ -24,11 +24,12 @@ Add image from inventory-image into your inventory script
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```lua
 TriggerEvent('nitrous:client:getNosLevel')
 ```
 Have to Look Like this
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```lua
 local function enterVehicle(veh, indexgarage, type, garage)
     local plate = QBCore.Functions.GetPlate(veh)
@@ -58,5 +59,14 @@ local function enterVehicle(veh, indexgarage, type, garage)
 end
 ```
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+in qb-garages/server/main.lua under RegisterNetEvent('qb-garage:server:updateVehicle', function(state, fuel, engine, body, plate, garage)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+```lua
+RegisterNetEvent('qb-garage:server:updateVehicleNos', function(nos, plate)
+    MySQL.Async.execute('UPDATE player_vehicles SET nitrous = ? WHERE plate = ?', {nos, plate})
+end)
+```
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Big Thanks on Silent and Man1C for helping me alot with function for saving in DataBase
