@@ -32,7 +32,6 @@ RegisterNetEvent('nitrous:server:StopSync', function(plate)
     TriggerClientEvent('nitrous:client:StopSync', -1, plate)
 end)
 
-
 RegisterNetEvent('nitrous:server:updateVehicleNos', function(nos, plate)
     MySQL.Async.execute('UPDATE player_vehicles SET nitrous = ? WHERE plate = ?', {nos, plate})
 end)
