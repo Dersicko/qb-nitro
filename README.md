@@ -8,7 +8,7 @@ Purge Flow Rate with different size of Purge Effect depends of Purge Flow Rate
 
 When nitro or purge finished give you empty bottle if you want to refill
 
-BUG: Infinity nitro and sound for purge
+BUG: Cant take info from database after restart server
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
