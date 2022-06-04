@@ -36,7 +36,7 @@ RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
     local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
     local ped = PlayerPedId()
     local veh = GetVehiclePedIsIn(ped)
-    --if IsToggleModOn(veh, 18) then
+    if IsToggleModOn(veh, 18) then
         if not NitrousActivated then
             if IsInVehicle and not IsThisModelABike(GetEntityModel(GetVehiclePedIsIn(ped))) then
                 if GetPedInVehicleSeat(veh, -1) == ped then
@@ -61,9 +61,9 @@ RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
         else
             QBCore.Functions.Notify('You Already Have NOS Active', 'error')
         end
-    --else
-    --    QBCore.Functions.Notify('Vehicle need to have a Turbo to use NOS', 'error')
-    --end
+    else
+        QBCore.Functions.Notify('Vehicle need to have a Turbo to use NOS', 'error')
+    end
 end)
 
 local nosupdated = false
@@ -104,16 +104,6 @@ CreateThread(function()
                                     Wait(100)
                                 end
                             end)
-                        elseif IsControlJustPressed(0, 121) and nitroflowrate <= 2 then
-                            nitroflowrate = nitroflowrate + 1
-                            QBCore.Functions.Notify('Nitro Flowrate: ' .. nitroflowrate)
-                        elseif IsControlJustPressed(0, 121) and nitroflowrate >= 2 then
-                            QBCore.Functions.Notify('Nitro is on maximum Flowrate')
-                        elseif IsControlJustPressed(0, 214) and nitroflowrate >= 2 then
-                            nitroflowrate = nitroflowrate - 1
-                            QBCore.Functions.Notify('Nitro Flowrate: ' .. nitroflowrate)
-                        elseif IsControlJustPressed(0, 214) and nitroflowrate <= 2 then
-                            QBCore.Functions.Notify('Nitro is on minimum Flowrate')
                         end
                     elseif PurgeMode then
                         if IsControlPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then

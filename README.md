@@ -14,7 +14,7 @@ BUG: Cant take info from database after restart server
 
 Add item into shared/items.lua
 ```lua
-['bottlenitrous'] 				 	 = {['name'] = 'bottlenitrous', 			  	  		['label'] = 'Bottle Nitrous', 					['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'bottlenitrous.png', 				['unique'] = false, 	['useable'] = false, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'Empty bottle of nitrous. You have to Refil'},
+['emptynitrous'] 				 	 = {['name'] = 'emptynitrous', 			  	  		['label'] = 'Empty Bottle', 					['weight'] = 1000, 		['type'] = 'item', 		['image'] = 'emptynitrous.png', 				['unique'] = true, 	['useable'] = false, 	['shouldClose'] = true,	   ['combinable'] = nil,   ['description'] = 'Empty bottle of nitrous. You have to Refil'},
 ```
 
 Import nitrous.sql into your DataBase
