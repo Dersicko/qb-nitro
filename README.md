@@ -6,9 +6,7 @@ Purge System
 
 Purge Flow Rate with different size of Purge Effect depends of Purge Flow Rate
 
-When nitro or purge finished give you empty bottle if you want to refill
-
-BUG: Cant take info from database after restart server
+When nitro or purge finished give you empty bottle which you can to refill
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +24,7 @@ Add image from inventory-image into your inventory script
 Add into qb-garages/client/main.lua on line 408 under TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ```lua
-TriggerEvent('nitrous:client:getNosLevel')
+QBCore.Functions.TriggerCallback('qb-nitro:GetNosLoadedVehs', function(vehs) VehicleNitrous = vehs while VehicleNitrous == nil do Wait(100) end end)
 ```
 Have to Look Like this
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -40,7 +38,7 @@ local function enterVehicle(veh, indexgarage, type, garage)
             local totalFuel = exports['LegacyFuel']:GetFuel(veh)
             local vehProperties = QBCore.Functions.GetVehicleProperties(veh)
             TriggerServerEvent('qb-garage:server:updateVehicle', 1, totalFuel, engineDamage, bodyDamage, plate, indexgarage)
-            TriggerEvent('nitrous:client:getNosLevel')
+            QBCore.Functions.TriggerCallback('qb-nitro:GetNosLoadedVehs', function(vehs) VehicleNitrous = vehs while VehicleNitrous == nil do Wait(100) end end)
             CheckPlayers(veh, garage)
             if type == "house" then
                 exports['qb-core']:DrawText(Lang:t("info.car_e"), 'left')
@@ -58,15 +56,5 @@ local function enterVehicle(veh, indexgarage, type, garage)
     end, plate, type, indexgarage, PlayerGang.name)
 end
 ```
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-in qb-garages/server/main.lua under RegisterNetEvent('qb-garage:server:updateVehicle', function(state, fuel, engine, body, plate, garage)
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-```lua
-RegisterNetEvent('qb-garage:server:updateVehicleNos', function(nos, plate)
-    MySQL.Async.execute('UPDATE player_vehicles SET nitrous = ? WHERE plate = ?', {nos, plate})
-end)
-```
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Big Thanks on Silent and Man1C for helping me alot with function for saving in DataBase
+Big Thanks to NotReload for helping me alot with function for saving in DataBase

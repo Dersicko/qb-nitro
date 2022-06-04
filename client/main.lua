@@ -15,24 +15,16 @@ function tableHasKey(table,key)
     return table[key] ~= nil
 end
 
-RegisterNetEvent('nitrous:client:getNosLevel', function()
-    local ped = PlayerPedId()
-    local vehicle = GetVehiclePedIsIn(ped, false)
-    local modelPlate = QBCore.Functions.GetPlate(vehicle)
-    local hasNitro = tableHasKey(VehicleNitrous, modelPlate)
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function() QBCore.Functions.TriggerCallback('qb-nitro:GetNosLoadedVehs', function(vehs) VehicleNitrous = vehs while VehicleNitrous == nil do Wait(100) end end) end)
 
-    if hasNitro then
-        TriggerServerEvent('qb-garage:server:updateVehicleNos', VehicleNitrous[modelPlate].level, modelPlate)
-    end
+AddEventHandler('onResourceStart', function(resource)
+    if GetCurrentResourceName() == resource then
+		QBCore.Functions.TriggerCallback('qb-nitro:GetNosLoadedVehs', function(vehs) VehicleNitrous = vehs while VehicleNitrous == nil do Wait(100) end end)
+	end
+	Wait(500)
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    QBCore.Functions.TriggerCallback('qb-garage:server:GetVehicleNitrous', function(nitrous)
-        TriggerServerEvent('nitrous:client:getNosLevel', nitrous, veh)
-    end, vehicle.plate)
-end)
-
-RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
+RegisterNetEvent('qb-nitro:client:ApplyNitrous', function()
     local IsInVehicle = IsPedInAnyVehicle(PlayerPedId())
     local ped = PlayerPedId()
     local veh = GetVehiclePedIsIn(ped)
@@ -50,7 +42,10 @@ RegisterNetEvent('qb-nitrous:client:LoadNitrous', function()
                         TriggerServerEvent("QBCore:Server:RemoveItem", 'nitrous', 1)
                         local CurrentVehicle = GetVehiclePedIsIn(PlayerPedId())
                         local Plate = trim(GetVehicleNumberPlateText(CurrentVehicle))
-                        TriggerServerEvent('nitrous:server:LoadNitrous', Plate)
+                        TriggerServerEvent('qb-nitro:server:LoadNitrous', Plate)
+                    end, function() -- Cancel
+                        TriggerEvent("QBCore:Notify", "Failed", "error")
+                        ClearPedTasks(ped)
                     end)
                 else
                     QBCore.Functions.Notify("You cannot do that from this seat!", "error")
@@ -87,17 +82,17 @@ CreateThread(function()
                             CreateThread(function()
                                 while NitrousActivated do
                                     if VehicleNitrous[Plate].level - 1 ~= 0 then
-                                        TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.5))
+                                        TriggerServerEvent('qb-nitro:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.5))
                                         TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
                                     else
-                                        TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
+                                        TriggerServerEvent('qb-nitro:server:UnloadNitrous', Plate)
                                         NitrousActivated = false
                                         SetVehicleBoostActive(CurrentVehicle, 0)
                                         SetVehicleEnginePowerMultiplier(CurrentVehicle, LastEngineMultiplier)
                                         SetVehicleEngineTorqueMultiplier(CurrentVehicle, 1.0)
                                         for index,_ in pairs(Fxs) do
                                             StopParticleFxLooped(Fxs[index], 1)
-                                            TriggerServerEvent('nitrous:server:StopSync', trim(GetVehicleNumberPlateText(CurrentVehicle)))
+                                            TriggerServerEvent('qb-nitro:server:StopSync', trim(GetVehicleNumberPlateText(CurrentVehicle)))
                                             Fxs[index] = nil
                                         end
                                     end
@@ -107,27 +102,29 @@ CreateThread(function()
                         end
                     elseif PurgeMode then
                         if IsControlPressed(0, 36) and GetPedInVehicleSeat(CurrentVehicle, -1) == PlayerPedId() then
+                            TriggerServerEvent('qb-nitro:server:SyncPurge', VehToNet(CurrentVehicle), true)
                             if VehicleNitrous[Plate].level - 1 ~= 0 then
                                 if purgeflowrate >= 0.1 or purgeflowrate <= 0.3 then
-                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.5))
+                                    TriggerServerEvent('qb-nitro:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 0.5))
                                     TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
                                     SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
 				                    SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
                                 elseif purgeflowrate >= 0.4 or purgeflowrate <= 0.7 then
-                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.5))
+                                    TriggerServerEvent('qb-nitro:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 1.5))
                                     TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
                                     SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
                                     SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
                                 elseif purgeflowrate >= 0.8 or purgeflowrate <= 1.0 then
-                                    TriggerServerEvent('nitrous:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 3.0))
+                                    TriggerServerEvent('qb-nitro:server:UpdateNitroLevel', Plate, (VehicleNitrous[Plate].level - 3.0))
                                     TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, true)
                                     SetVehicleBoostActive(CurrentVehicle, 1) --Boost Sound
                                     SetVehicleNitroPurgeEnabled(CurrentVehicle, true)
                                 end
                             else
-                                TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
+                                TriggerServerEvent('qb-nitro:server:UnloadNitrous', Plate)
                                 SetVehicleNitroPurgeEnabled(CurrentVehicle, false)
                                 SetVehicleBoostActive(CurrentVehicle, false)
+                                TriggerServerEvent('qb-nitro:server:SyncPurge', VehToNet(veh), false)
                             end
                             Wait(100)
                         elseif IsControlJustPressed(0, 121) and purgeflowrate <= 0.9 then
@@ -166,25 +163,27 @@ CreateThread(function()
                             SetVehicleEngineTorqueMultiplier(veh, 1.0)
                             for index,_ in pairs(Fxs) do
                                 StopParticleFxLooped(Fxs[index], 1)
-                                TriggerServerEvent('nitrous:server:StopSync', trim(GetVehicleNumberPlateText(veh)))
+                                TriggerServerEvent('qb-nitro:server:StopSync', trim(GetVehicleNumberPlateText(veh)))
                                 Fxs[index] = nil
                             end
                             TriggerEvent('hud:client:UpdateNitrous', VehicleNitrous[Plate].hasnitro,  VehicleNitrous[Plate].level, false)
-                            TriggerServerEvent('nitrous:server:Update', {Plate, hasnitro, level})
+                            TriggerServerEvent('qb-nitro:server:Update', {Plate, hasnitro, level})
+                            TriggerServerEvent('qb-nitro:server:SyncPurge', VehToNet(veh), false)
                             NitrousActivated = false
                         end
                     end
                 else
-                    TriggerServerEvent('nitrous:server:UnloadNitrous', Plate)
+                    TriggerServerEvent('qb-nitro:server:UnloadNitrous', Plate)
                     NitrousActivated = false
                     SetVehicleBoostActive(CurrentVehicle, 0)
                     SetVehicleEnginePowerMultiplier(CurrentVehicle, LastEngineMultiplier)
                     SetVehicleEngineTorqueMultiplier(CurrentVehicle, 1.0)
                     for index,_ in pairs(Fxs) do
                         StopParticleFxLooped(Fxs[index], 1)
-                        TriggerServerEvent('nitrous:server:StopSync', trim(GetVehicleNumberPlateText(CurrentVehicle)))
+                        TriggerServerEvent('qb-nitro:server:StopSync', trim(GetVehicleNumberPlateText(CurrentVehicle)))
                         Fxs[index] = nil
                     end
+                    TriggerServerEvent('qb-nitro:server:SyncPurge', VehToNet(veh), false)
                 end
             else
                 if not nosupdated then
@@ -280,7 +279,7 @@ CreateThread(function()
         if NitrousActivated then
             local veh = GetVehiclePedIsIn(PlayerPedId())
             if veh ~= 0 then
-                TriggerServerEvent('nitrous:server:SyncFlames', VehToNet(veh))
+                TriggerServerEvent('qb-nitro:server:SyncFlames', VehToNet(veh))
                 SetVehicleBoostActive(veh, 1)
                 for _,bones in pairs(p_flame_location) do
                     if GetEntityBoneIndexByName(veh, bones) ~= -1 then
@@ -303,7 +302,7 @@ end)
 
 local NOSPFX = {}
 
-RegisterNetEvent('nitrous:client:SyncFlames', function(netid, nosid)
+RegisterNetEvent('qb-nitro:client:SyncFlames', function(netid, nosid)
     local veh = NetToVeh(netid)
     if veh ~= 0 then
         local myid = GetPlayerServerId(PlayerId())
@@ -332,7 +331,7 @@ RegisterNetEvent('nitrous:client:SyncFlames', function(netid, nosid)
     end
 end)
 
-RegisterNetEvent('nitrous:client:StopSync', function(plate)
+RegisterNetEvent('qb-nitro:client:StopSync', function(plate)
     if NOSPFX[plate] then
         for k, v in pairs(NOSPFX[plate]) do
             StopParticleFxLooped(v.pfx, 1)
@@ -341,11 +340,12 @@ RegisterNetEvent('nitrous:client:StopSync', function(plate)
     end
 end)
 
-RegisterNetEvent('nitrous:client:UpdateNitroLevel', function(Plate, level)
+RegisterNetEvent('qb-nitro:client:UpdateNitroLevel', function(Plate, level)
     VehicleNitrous[Plate].level = level
+    TriggerServerEvent('qb-nitro:server:GetVehicleNos', level, Plate)
 end)
 
-RegisterNetEvent('nitrous:client:LoadNitrous', function(Plate)
+RegisterNetEvent('qb-nitro:client:LoadNitrous', function(Plate)
     VehicleNitrous[Plate] = {
         hasnitro = true,
         level = 100,
@@ -357,7 +357,7 @@ RegisterNetEvent('nitrous:client:LoadNitrous', function(Plate)
     end
 end)
 
-RegisterNetEvent('nitrous:client:UnloadNitrous', function(Plate)
+RegisterNetEvent('qb-nitro:client:UnloadNitrous', function(Plate)
     VehicleNitrous[Plate] = nil
     TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items['emptynitrous'], "add")
     TriggerServerEvent("QBCore:Server:AddItem", 'emptynitrous', 1)
