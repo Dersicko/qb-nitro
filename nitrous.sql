@@ -1,1 +1,3 @@
-ALTER TABLE player_vehicles ADD COLUMN `nitrous` int(11) NOT NULL DEFAULT 0;
+ALTER TABLE `player_vehicles`
+ADD COLUMN `noslevel` INT(10) NULL DEFAULT 0 AFTER `drivingdistance`,
+ADD COLUMN `hasnitro` TINYINT(0) NULL DEFAULT 0 AFTER `noslevel`;
